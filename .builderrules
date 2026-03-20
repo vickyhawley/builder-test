@@ -1,0 +1,27 @@
+# Builder.io rules
+
+## Stack
+- Framework: Next.js (App Router)
+- Language: TypeScript — strict mode, no `any`
+- Styling: Tailwind CSS — use utility classes only, no inline styles
+- Components: React functional components with named exports
+
+## Components
+- Always check `app/components/ui/` before generating new primitives
+- If Button, Card, Input, or Badge exist there — import and use them
+- Do not create duplicate components
+
+## Code style
+- Named exports only — no default exports except page-level files
+- Every component needs an explicit TypeScript props interface
+- Keep components small — split anything over ~100 lines
+
+## Commands (run on changed files only)
+- Type check: `npx tsc --noEmit src/path/to/file.tsx`
+- Lint: `npx eslint --fix src/path/to/file.tsx`
+- Format: `npx prettier --write src/path/to/file.tsx`
+
+## Do not
+- Hardcode colours — use Tailwind tokens
+- Install new packages without noting it in the PR description
+- Generate new utility functions if one exists in `src/lib/`
