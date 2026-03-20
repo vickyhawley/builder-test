@@ -1,3 +1,4 @@
+import { LiveDataSection } from "./components/dashboard/live-data-section";
 import { Badge, Button, Card, CardHeader } from "./components/ui";
 
 interface DashboardMetric {
@@ -129,6 +130,8 @@ export default function Home() {
             </Card>
           ))}
         </section>
+
+        <LiveDataSection />
 
         <section className="grid gap-4 lg:grid-cols-[minmax(0,1.6fr)_minmax(320px,1fr)]">
           <Card className="rounded-3xl" padding="lg">
