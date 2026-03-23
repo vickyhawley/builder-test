@@ -43,10 +43,11 @@ export const useMarketSnapshot = (): UseMarketSnapshotResult => {
 
   useEffect(() => {
     let isActive = true;
+    let hasLoaded = false;
 
     const fetchMarketSnapshot = async (): Promise<void> => {
       try {
-        if (!data) {
+        if (!hasLoaded) {
           setIsLoading(true);
         }
 
@@ -75,6 +76,7 @@ export const useMarketSnapshot = (): UseMarketSnapshotResult => {
           cryptoSource: "Coinbase",
         });
         setError(null);
+        hasLoaded = true;
       } catch (caughtError: unknown) {
         if (!isActive) {
           return;
@@ -87,7 +89,7 @@ export const useMarketSnapshot = (): UseMarketSnapshotResult => {
 
         setError(message);
       } finally {
-        if (isActive) {
+        if (isActive && !hasLoaded) {
           setIsLoading(false);
         }
       }
@@ -103,7 +105,7 @@ export const useMarketSnapshot = (): UseMarketSnapshotResult => {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [data]);
+  }, []);
 
   return { data, isLoading, error };
 };

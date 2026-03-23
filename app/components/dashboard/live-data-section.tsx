@@ -1,15 +1,17 @@
 "use client";
 
-import { Badge, Card, CardHeader } from "../ui";
+import type { ReactElement } from "react";
+
 import { useMarketSnapshot } from "../../hooks/use-market-snapshot";
 import { useWeather } from "../../hooks/use-weather";
+import { Badge, Card, CardHeader } from "../ui";
 
 interface LiveMetricCardProps {
   label: string;
   value: string;
   summary: string;
   source: string;
-  updatedAt: string;
+  updatedAt?: string;
   isLoading: boolean;
   error: string | null;
 }
@@ -30,6 +32,8 @@ const LiveMetricCard = ({
   isLoading,
   error,
 }: LiveMetricCardProps) => {
+  const updatedLabel = updatedAt ? formatTimestamp(updatedAt) : "refreshing";
+
   return (
     <Card className="rounded-3xl" padding="lg">
       <div className="space-y-3">
@@ -46,14 +50,14 @@ const LiveMetricCard = ({
           <p className="text-sm text-gray-500">{error ?? summary}</p>
         </div>
         <p className="text-xs text-gray-400">
-          Source: {source} · Updated {isLoading && !updatedAt ? "just now" : formatTimestamp(updatedAt)}
+          Source: {source} · Updated {updatedLabel}
         </p>
       </div>
     </Card>
   );
 };
 
-export const LiveDataSection = (): JSX.Element => {
+export const LiveDataSection = (): ReactElement => {
   const weather = useWeather();
   const marketSnapshot = useMarketSnapshot();
 
@@ -96,11 +100,15 @@ export const LiveDataSection = (): JSX.Element => {
         />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <LiveMetricCard
-            label={weather.data?.location ? `${weather.data.location} weather` : "Weather"}
+            label={
+              weather.data?.location
+                ? `${weather.data.location} weather`
+                : "Weather"
+            }
             value={weatherValue}
             summary={weatherSummary}
             source={weather.data?.source ?? "Open-Meteo"}
-            updatedAt={weather.data?.updatedAt ?? new Date().toISOString()}
+            updatedAt={weather.data?.updatedAt}
             isLoading={weather.isLoading}
             error={weather.error}
           />
@@ -109,7 +117,7 @@ export const LiveDataSection = (): JSX.Element => {
             value={exchangeValue}
             summary={exchangeSummary}
             source={marketSnapshot.data?.fxSource ?? "Frankfurter"}
-            updatedAt={marketSnapshot.data?.updatedAt ?? new Date().toISOString()}
+            updatedAt={marketSnapshot.data?.updatedAt}
             isLoading={marketSnapshot.isLoading}
             error={marketSnapshot.error}
           />
@@ -118,7 +126,7 @@ export const LiveDataSection = (): JSX.Element => {
             value={bitcoinValue}
             summary={bitcoinSummary}
             source={marketSnapshot.data?.cryptoSource ?? "Coinbase"}
-            updatedAt={marketSnapshot.data?.updatedAt ?? new Date().toISOString()}
+            updatedAt={marketSnapshot.data?.updatedAt}
             isLoading={marketSnapshot.isLoading}
             error={marketSnapshot.error}
           />

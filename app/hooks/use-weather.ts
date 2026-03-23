@@ -71,10 +71,11 @@ export const useWeather = (): UseWeatherResult => {
 
   useEffect(() => {
     let isActive = true;
+    let hasLoaded = false;
 
     const fetchWeather = async (): Promise<void> => {
       try {
-        if (!data) {
+        if (!hasLoaded) {
           setIsLoading(true);
         }
 
@@ -100,6 +101,7 @@ export const useWeather = (): UseWeatherResult => {
           source: "Open-Meteo",
         });
         setError(null);
+        hasLoaded = true;
       } catch (caughtError: unknown) {
         if (!isActive) {
           return;
@@ -112,7 +114,7 @@ export const useWeather = (): UseWeatherResult => {
 
         setError(message);
       } finally {
-        if (isActive) {
+        if (isActive && !hasLoaded) {
           setIsLoading(false);
         }
       }
@@ -128,7 +130,7 @@ export const useWeather = (): UseWeatherResult => {
       isActive = false;
       window.clearInterval(intervalId);
     };
-  }, [data]);
+  }, []);
 
   return { data, isLoading, error };
 };
